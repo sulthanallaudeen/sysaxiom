@@ -316,13 +316,13 @@ $(document).ready(function() {
 
 
 
-/* CL Editor */
+/* CL Editor  ooo
 
 $(".cleditor").cleditor({
     width: "auto",
     height: "auto"
 });
-
+*/
 /* Modal fix */
 
 $('.modal').appendTo($('body'));

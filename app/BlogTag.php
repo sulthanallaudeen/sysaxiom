@@ -22,12 +22,15 @@ class BlogTag extends Model implements AuthenticatableContract, CanResetPassword
         return $this->belongsToMany('App\Blog', 'blog_tag', 'tag_id', 'user_id')->select(array('blog.id', 'blog.blogTitle', 'blog.blogUrl'));
     }
 
+
+    public $timestamps = true;
+
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'email', 'password'];
+	protected $fillable = ['blog_id', 'tag_id', 'user_id'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.

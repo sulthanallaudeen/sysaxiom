@@ -27,7 +27,7 @@ class Blog extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'email', 'password'];
+	protected $fillable = ['blogTitle', 'blogUrl', 'blogContent', 'blogAuthor', 'blogStatus'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -35,5 +35,16 @@ class Blog extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 * @var array
 	 */
 	protected $hidden = ['password', 'remember_token'];
+
+	public static $postBlog = array(
+		'blogTitle' =>  'required|unique:blog',
+		'blogUrl' =>  'required',
+		'blogContent' =>  'required',
+        );
+	public static $updateBlog = array(
+		'blogTitle' =>  'required',
+		'blogUrl' =>  'required',
+		'blogContent' =>  'required',
+        );
 
 }

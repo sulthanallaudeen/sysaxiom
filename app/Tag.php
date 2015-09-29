@@ -29,5 +29,8 @@ class Tag extends Model implements AuthenticatableContract, CanResetPasswordCont
 	 * @var array
 	 */
 	
-
+	public static $postTag = array(
+		'tagTitle' =>  'required',
+		'tagContent' =>  'required',
+        );
 }

@@ -2,7 +2,7 @@
     <IfModule mod_negotiation.c>
         Options -MultiViews
     </IfModule>
-	RewriteRule ^(project|sa|)($|/) - [L]
+	RewriteRule ^(app|sa)($|/) - [L]
     RewriteEngine On
 
     # Redirect Trailing Slashes...
