@@ -61,7 +61,7 @@
 		#Write Blog
 		
 		public function writeBlog() {
-			$tags = Tag::where('tagStatus', 1);
+			$tags = Tag::where('tagStatus', 1)->get();
 			return view('admin.blog.writeBlog')->with('tags', $tags);
 		}
 		
@@ -171,6 +171,12 @@
 				$Response = array('success' => '0', 'err' => $validation->messages());
 			}
 			return $Response;
+		}
+
+		#App Configuration
+		
+		public function appConfig() {
+			return view('admin.appConfig.appConfig');
 		}
 		
 	}

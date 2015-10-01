@@ -100,6 +100,42 @@
                                   </div>
                                 </div>
 
+<?php
+#Blog Time Parsing 
+$blogFullDate = $blogData->blogDate;
+$blogDate = date('Y-m-d', strtotime($blogFullDate));
+$blogTime = date('H:i:s', strtotime($blogFullDate));
+
+?>
+                                 <div class="form-group">
+                                  <label class="col-lg-4 control-label">Post Date</label>
+                                  <div class="col-lg-8">
+                                    <div id="datetimepicker1" class="input-append">
+                        <input data-format="yyyy-MM-dd" type="text" class="form-control dtpicker" id="blogDate" name="postDate" value="{{$blogDate}}">
+                        <span class="add-on">
+                          <i data-time-icon="icon-time" data-date-icon="icon-calendar" class="btn btn-info btn-lg"></i>
+                        </span>
+                      </div>
+                                    
+                                  </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                  <label class="col-lg-4 control-label">Post Time</label>
+                                  <div class="col-lg-8">
+                                    <div id="datetimepicker2" class="input-append">
+                        <input data-format="hh:mm:ss" class="form-control dtpicker" type="text" id="blogTime" name="postTime" value="{{$blogTime}}">
+                        <span class="add-on">
+                          <i data-time-icon="icon-time" data-date-icon="icon-calendar" class="btn btn-info btn-lg"></i>
+                        </span>
+                      </div>
+                                    
+                                  </div>
+                                </div>
+
+
+
 
                                 <div class="form-group">
                                   <label class="col-lg-4 control-label">Blog Status</label>
@@ -164,6 +200,7 @@ $( "#blogTitle" ).keypress(function() {
   var blogTitle =  $("#blogTitle").val();
   var blogUrl =  $("#blogUrl").val();
   var blogContent = CKEDITOR.instances['blogpost'].getData();
+  var blogDate =  $("#blogDate").val()+' '+$("#blogTime").val();
   var blogStatus =   $('input:radio[name=blogStatus]:checked').val();
   var blogTags = [];
   $('input[name=blogTags]:checked').map(function() {
@@ -171,7 +208,7 @@ $( "#blogTitle" ).keypress(function() {
   });
 
 
-  $.post( "../updateBlog", { _token : _token, id: blogId, blogTitle: blogTitle, blogUrl: blogUrl, blogContent:blogContent, blogTags:blogTags, blogStatus:blogStatus })
+  $.post( "../updateBlog", { _token : _token, id: blogId, blogTitle: blogTitle, blogUrl: blogUrl, blogContent:blogContent, blogDate : blogDate, blogTags:blogTags, blogStatus:blogStatus })
   .done(function( data ) {
     var result = jQuery.parseJSON(JSON.stringify(data));
 

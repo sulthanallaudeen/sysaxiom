@@ -167,7 +167,7 @@
         <div class="col-md-4">
           <!-- Logo. -->
           <div class="logo">
-            <h1><a href="#">Sysaxiom<span class="bold"></span></a></h1>
+            <h1><a href="{{ URL::to('/dashboard') }}">Sysaxiom<span class="bold"></span></a></h1>
             <p class="meta">Allaudeen's Panel</p>
           </div>
           <!-- Logo ends -->
@@ -371,37 +371,7 @@
               <li><a href="{{ URL::to('/listtag') }}">Edit / Delete Tag</a></li>
             </ul>
           </li> 
-          <li class="has_sub"><a ><i class="icon-list-alt"></i> Tag  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
-            <ul>
-              
-            </ul>
-          </li>  
-          <li class="has_sub"><a href="#"><i class="icon-file-alt"></i> Pages #1  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
-            <ul>
-              <li><a href="post.html">Post</a></li>
-              <li><a href="login.html">Login</a></li>
-              <li><a href="register.html">Register</a></li>
-              <li><a href="support.html">Support</a></li>
-              <li><a href="invoice.html">Invoice</a></li>
-              <li><a href="profile.html">Profile</a></li>
-              <li><a href="gallery.html">Gallery</a></li>
-            </ul>
-          </li> 
-          <li class="has_sub"><a href="#"><i class="icon-file-alt"></i> Pages #2  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
-            <ul>
-              <li><a href="media.html">Media</a></li>
-              <li><a href="statement.html">Statement</a></li>
-              <li><a href="error.html">Error</a></li>
-              <li><a href="error-log.html">Error Log</a></li>
-              <li><a href="calendar.html">Calendar</a></li>
-              <li><a href="grid.html">Grid</a></li>
-            </ul>
-          </li>                             
-          <li><a href="charts.html"><i class="icon-bar-chart"></i> Charts</a></li> 
-          <li><a href="tables.html"><i class="icon-table"></i> Tables</a></li>
-          <li><a href="forms.html"><i class="icon-tasks"></i> Forms</a></li>
-          <li><a href="ui.html"><i class="icon-magic"></i> User Interface</a></li>
-          <li><a href="calendar.html"><i class="icon-calendar"></i> Calendar</a></li>
+          <li><a href="{{ URL::to('/appconfig') }} "><i class="icon-bar-chart"></i> App Config</a></li> 
         </ul>
     </div>
 

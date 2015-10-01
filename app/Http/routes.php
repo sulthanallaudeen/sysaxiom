@@ -26,7 +26,7 @@ Route::post('searchBlog', 'PublicController@searchBlog');
 
 
 #Admin Controller
-Route::get('admin', 'PublicController@adminLogin');
+Route::get('sa', 'PublicController@adminLogin');
 Route::post('authAdmin', 'PublicController@authAdminLogin');
 Route::get('logout', 'PublicController@logoutAdmin');
 Route::get('dashboard', 'HomeController@adminDashboard');
@@ -42,6 +42,8 @@ Route::get('writetag', 'HomeController@writeTag');
 Route::post('postTag', 'HomeController@postTag');
 Route::get('edittag/{id}', 'HomeController@editTag');
 Route::post('updateTag', 'HomeController@updateTag');
+#App Configuration
+Route::get('appconfig', 'HomeController@appConfig');
 
 #Web Services :: Depreciated
 Route::get('b', 'PublicController@adminLogin');

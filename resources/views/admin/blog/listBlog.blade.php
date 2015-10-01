@@ -59,7 +59,7 @@
             <tr>
                 <td>{{ $blog->id }}</td>
                 <td>{{ $blog->blogTitle }}</td>
-                <td>{{ $blog->created_at }}</td>
+                <td>{{ $blog->blogDate }}</td>
                 <td>
 
                   <a href="{{ URL::to('/editblog/'.$blog->id) }}">Edit </a> / <a href="{{ URL::to('/blog/'.$blog->blogUrl) }}">View</a>

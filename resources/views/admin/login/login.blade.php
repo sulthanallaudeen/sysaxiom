@@ -19,6 +19,14 @@
                   {!! Form::open(array('url' => 'authAdmin', 'name' => 'loginForm', 'class' => 'form-horizontal'))!!}
 				          <!-- Error Mesage -->
                     <!-- Email -->
+					
+					@if(Session::has('warning'))
+					<div class="alert alert-danger">
+						<h2>{{ Session::get('warning') }}</h2>
+					</div>
+				@endif
+					
+					
                     <div class="form-group">
                       <label class="control-label col-lg-3" for="inputEmail">Email</label>
                       <div class="col-lg-9">

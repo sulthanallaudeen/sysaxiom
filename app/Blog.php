@@ -27,7 +27,7 @@ class Blog extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['blogTitle', 'blogUrl', 'blogContent', 'blogAuthor', 'blogStatus'];
+	protected $fillable = ['blogTitle', 'blogUrl', 'blogContent', 'blogAuthor', 'blogDate', 'blogStatus'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.

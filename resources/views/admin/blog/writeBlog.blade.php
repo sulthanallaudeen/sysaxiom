@@ -90,6 +90,38 @@
 
 
                                 <div class="form-group">
+                                  <label class="col-lg-4 control-label">Post Date</label>
+                                  <div class="col-lg-8">
+                                    <div id="datetimepicker1" class="input-append">
+                        <input data-format="yyyy-MM-dd" type="text" class="form-control dtpicker" id="blogDate" name="postDate" value="<?php echo date('Y-m-d')?>">
+                        <span class="add-on">
+                          <i data-time-icon="icon-time" data-date-icon="icon-calendar" class="btn btn-info btn-lg"></i>
+                        </span>
+                      </div>
+                                    
+                                  </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                  <label class="col-lg-4 control-label">Post Time</label>
+                                  <div class="col-lg-8">
+                                    <div id="datetimepicker2" class="input-append">
+                        <input data-format="hh:mm:ss" class="form-control dtpicker" type="text" id="blogTime" name="postTime" value="<?php echo date('H:i:s')?>">
+                        <span class="add-on">
+                          <i data-time-icon="icon-time" data-date-icon="icon-calendar" class="btn btn-info btn-lg"></i>
+                        </span>
+                      </div>
+                                    
+                                  </div>
+                                </div>
+
+                                  
+          
+                      
+
+
+                                <div class="form-group">
                                   <label class="col-lg-4 control-label">Blog Status</label>
                                   <div class="col-lg-8">
                                     <div class="radio">
@@ -150,6 +182,7 @@ $( "#blogTitle" ).keypress(function() {
   var _token = $("input[name=_token]").val();
   var blogTitle =  $("#blogTitle").val();
   var blogUrl =  $("#blogUrl").val();
+  var blogDate =  $("#blogDate").val()+' '+$("#blogTime").val();
   var blogContent = CKEDITOR.instances['blogpost'].getData();
   var blogStatus =   $('input:radio[name=blogStatus]:checked').val();
   var blogTags = [];
@@ -158,7 +191,7 @@ $( "#blogTitle" ).keypress(function() {
   });
 
 
-  $.post( "postBlog", { _token : _token, blogTitle: blogTitle, blogUrl: blogUrl, blogContent:blogContent, blogTags:blogTags, blogStatus:blogStatus })
+  $.post( "postBlog", { _token : _token, blogTitle: blogTitle, blogUrl: blogUrl, blogContent:blogContent, blogTags:blogTags, blogDate : blogDate, blogStatus:blogStatus })
   .done(function( data ) {
     var result = jQuery.parseJSON(JSON.stringify(data));
 

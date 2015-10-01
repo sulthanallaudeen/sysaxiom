@@ -73,9 +73,9 @@
 			$searchQuery = Input::get('searchQuery');
 			$blogResult = Blog::where('blogTitle', 'LIKE', '%' . $searchQuery . '%')->get();
 			if (count($blogResult) == 0) {
-				$resultData = '<div class="alert alert-danger" role="alert"><strong>Searching for the Posts contains the name - ' . $searchQuery . ' ( ' . count($blogResult) . ' Results )</div>';
+				$resultData = '<div class="alert alert-danger" role="alert"><strong>Searching for the Posts contains the word "' . $searchQuery . '" ( ' . count($blogResult) . ' Results )</div>';
 				} else {
-				$resultData = '<div class="alert alert-success" role="alert"><strong>Searching for the Posts contains the name - ' . $searchQuery . ' ( ' . count($blogResult) . ' Result )</div>';
+				$resultData = '<div class="alert alert-success" role="alert"><strong>Searching for the Posts contains the word "' . $searchQuery . '" ( ' . count($blogResult) . ' Result )</div>';
 			}
 			
 			foreach ($blogResult as $key) {
@@ -186,7 +186,8 @@
 		   }
 		   else
 		   {
-			return Redirect::to('admin.login.login')->with('Message', 'Invalid Username or Password');   }
+                        #return Redirect::to('admin.login.login')->with('Message', 'Invalid Username or Password');   }
+                        return Redirect::to('sa')->with('warning', 'Invalid Username or Password');   }
 		}
 		
 		#Admin Logout
