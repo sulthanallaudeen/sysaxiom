@@ -41,6 +41,7 @@
 
                 <div class="widget-head">
                   <div class="pull-left">Forms</div>
+				  
                   <div class="widget-icons pull-right">
                     <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a>
                     <a href="#" class="wclose"><i class="icon-remove"></i></a>
@@ -55,6 +56,7 @@
                     <!-- Form starts.  -->
                       {!! Form::open(array('url' => 'blogPost', 'name' => 'blogPost', 'id' => 'blogPost','class' => 'form-horizontal'))!!}
                       <input type="hidden" name="blogId" value="{{ $blogData->id }}" id="blogId">
+					  <a style="float:right"class="dropdown-toggle" href="{{ URL::to('/blog/'.$blogData->blogUrl) }}" >View Blog</a>
                                 <div class="form-group">
                                   <label class="col-lg-4 control-label">Blog Title</label>
                                   <div class="col-lg-8">

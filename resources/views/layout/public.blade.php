@@ -48,7 +48,6 @@
 
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            
             <li class="<?php if ($_SERVER['REQUEST_URI']=='/') { echo 'active'; } ?>"><a href="{{ URL::to('/') }}">Home </a></li>
             <li class="<?php if (preg_match('/blog/',$_SERVER['REQUEST_URI']))  { echo 'active'; } ?>"><a href="{{ URL::to('/') }}/blog">Blog</a></li>
             <li class="<?php if ($_SERVER['REQUEST_URI']=='/contact') { echo 'active'; } ?>"><a href="{{ URL::to('/') }}/contact">Contact</a></li>
@@ -61,8 +60,37 @@
                 <li class="dropdown-header" >About this website</li>
                 <li><a href="{{ URL::to('/') }}/technology">Technology used</a></li>
               </ul>
+			  
             </li>
           </ul>
+		  <?php
+		  if (Auth::check())
+		{
+		?>
+		  <!-- If Sulthan Logged in Then,, -->
+		  <ul class="nav navbar-nav navbar-right">
+			<?php
+			if(isset($data->id))
+			{
+			?>
+            <li><a href="{{ URL::to('/editblog/'.$data->id) }}">Edit Blog</a></li>
+			<?php
+			}
+			?>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
+              <ul class="dropdown-menu" >
+                <li><a href="{{ URL::to('/') }}/gallery">Profile</a></li>
+                <li><a href="{{ URL::to('/') }}/project">Settings</a></li>
+				<li><a href="{{ URL::to('/logout') }}">Logout</a></li>
+              </ul>
+			  
+            </li>
+          </ul>
+		  <!-- End of My Menu-->
+		  <?php
+		  }
+		  ?>
         </div><!--/.nav-collapse -->
       </div>
     </nav>

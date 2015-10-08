@@ -66,8 +66,7 @@
                         @foreach ($tags as $tag)
                         <div class="col-lg-6">
                             <ul class="list-unstyled">
-                                
-                                <li><a href="tag/{{ $tag->tagTitle }}"> {{ $tag->tagTitle }} </a></li>
+                                <li><a href="{{ asset('/tag').'/'.$tag->tagTitle }}"> {{ $tag->tagTitle }} <span class="badge">{{ $count = BlogTag::where('tag_id', $tag->id)->count() }}</span></a></li>
                             </ul>
                         </div>
                         @endforeach
