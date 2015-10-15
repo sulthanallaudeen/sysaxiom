@@ -113,7 +113,7 @@
 					BlogTag::create([
 					'blog_id' => Input::get('id'),
 					'user_id' => '1',
-					'tag_id' => $blogTagsData[0]
+					'tag_id' => $blogTagsData
 					]);
 				}
 				

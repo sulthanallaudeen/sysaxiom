@@ -7,6 +7,8 @@
 	use Redirect;
 	use Mail;
 	use App\User;
+	use App\MailTemplate;
+	use App\UserLog;
 	use Input;
 	use App\Blog;
 	use App\ContactMails;
@@ -48,7 +50,34 @@
 		*/
 		#Public Home Page
 		public function index() {
-			return view('public.index');
+
+		$platform = $this->getPlatform();
+		$browser = $this->getBrowser('browser');
+		$version = $this->getBrowser('version');
+		$ip = $_SERVER['REMOTE_ADDR'];
+		$date = date('Y-m-d H:i:s');
+ Mail::send([], array('platform' => $platform, 'browser' => $browser, 'version' => $version, 'date' => $date, 'ip' => $ip), function($message) use ($platform, $browser, $version, $date, $ip) {
+                    #Getting content from the Mail Template and Triggering the Email to the User with Activation Code
+                    $MailContent = MailTemplate::find(1);
+                    $MailBody = $MailContent->content;
+                    $MailBody = str_replace("{{os}}", $platform, $MailBody);
+                    $MailBody = str_replace("{{browser}}", $browser, $MailBody);
+                    $MailBody = str_replace("{{version}}", $version, $MailBody);
+                    $MailBody = str_replace("{{ip}}", $ip, $MailBody);
+                    $MailBody = str_replace("{{date}}", $date, $MailBody);
+                    $message->setBody($MailBody, 'text/html');
+                    $message->to('allaudeen.s@gmail.com');
+                    $message->subject($MailContent->subject);
+                });
+
+	
+		$data['platform'] = $platform;
+		$data['browser'] = $browser;
+		$data['version'] = $version;
+		$data['ip'] = $ip;
+		UserLog::create($data);
+		return view('public.index');
+			
 		}
 		
 		#Blog Full Listing
@@ -196,4 +225,158 @@
 			Session::flush();
 			return view('admin.login.login');
 		}
+
+		#System Utils
+		#Getting Browser Details
+	public function getBrowser($param) {
+	$u_agent = $_SERVER['HTTP_USER_AGENT']; 
+    $bname = 'Unknown';
+    $platform = 'Unknown';
+    $version= "";
+    if (preg_match('/linux/i', $u_agent)) {
+        $platform = 'linux';
+    }
+    elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
+        $platform = 'mac';
+    }
+    elseif (preg_match('/windows|win32/i', $u_agent)) {
+        $platform = 'windows';
+    }
+    if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent)) 
+    { 
+        $bname = 'Internet Explorer'; 
+        $ub = "MSIE"; 
+    } 
+    elseif(preg_match('/Firefox/i',$u_agent)) 
+    { 
+        $bname = 'Mozilla Firefox'; 
+        $ub = "Firefox"; 
+    } 
+    elseif(preg_match('/Chrome/i',$u_agent)) 
+    { 
+        $bname = 'Google Chrome'; 
+        $ub = "Chrome"; 
+    } 
+    elseif(preg_match('/Safari/i',$u_agent)) 
+    { 
+        $bname = 'Apple Safari'; 
+        $ub = "Safari"; 
+    } 
+    elseif(preg_match('/Opera/i',$u_agent)) 
+    { 
+        $bname = 'Opera'; 
+        $ub = "Opera"; 
+    } 
+    elseif(preg_match('/Netscape/i',$u_agent)) 
+    { 
+        $bname = 'Netscape'; 
+        $ub = "Netscape"; 
+    } 
+    $known = array('Version', $ub, 'other');
+    $pattern = '#(?<browser>' . join('|', $known) .
+    ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
+    if (!preg_match_all($pattern, $u_agent, $matches)) {
+    }
+    $i = count($matches['browser']);
+    if ($i != 1) {
+        if (strripos($u_agent,"Version") < strripos($u_agent,$ub)){
+            $version= $matches['version'][0];
+        }
+        else {
+            $version= $matches['version'][1];
+        }
+    }
+    else {
+        $version= $matches['version'][0];
+    }
+    if ($version==null || $version=="") {$version="?";}
+    if ($param=='browser') 
+    {
+    	return $bname;
+    }
+    else if ($param == 'version')
+    {
+    	return $version;
+    }
+    else
+    {
+    	return $this->lol();
+    }
+    
+
+	}
+
+	public function lol()
+	{
+		return '<h1 align="center">lol :p <br>Never Think of Hack Here !!</h1>';
+	}
+
+		#Getting OS Details
+		public function getPlatform() {
+$user_agent     =   $_SERVER['HTTP_USER_AGENT'];
+			    
+
+    $os_platform    =   "Unknown OS Platform";
+
+    $os_array       =   array(
+                            '/windows nt 10/i'     =>  'Windows 10',
+                            '/windows nt 6.3/i'     =>  'Windows 8.1',
+                            '/windows nt 6.2/i'     =>  'Windows 8',
+                            '/windows nt 6.1/i'     =>  'Windows 7',
+                            '/windows nt 6.0/i'     =>  'Windows Vista',
+                            '/windows nt 5.2/i'     =>  'Windows Server 2003/XP x64',
+                            '/windows nt 5.1/i'     =>  'Windows XP',
+                            '/windows xp/i'         =>  'Windows XP',
+                            '/windows nt 5.0/i'     =>  'Windows 2000',
+                            '/windows me/i'         =>  'Windows ME',
+                            '/win98/i'              =>  'Windows 98',
+                            '/win95/i'              =>  'Windows 95',
+                            '/win16/i'              =>  'Windows 3.11',
+                            '/macintosh|mac os x/i' =>  'Mac OS X',
+                            '/mac_powerpc/i'        =>  'Mac OS 9',
+                            '/linux/i'              =>  'Linux',
+                            '/ubuntu/i'             =>  'Ubuntu',
+                            '/iphone/i'             =>  'iPhone',
+                            '/ipod/i'               =>  'iPod',
+                            '/ipad/i'               =>  'iPad',
+                            '/android/i'            =>  'Android',
+                            '/blackberry/i'         =>  'BlackBerry',
+                            '/webos/i'              =>  'Mobile'
+                        );
+
+    foreach ($os_array as $regex => $value) { 
+
+        if (preg_match($regex, $user_agent)) {
+            $os_platform    =   $value;
+        }
+
+    }   
+
+    return $os_platform;
+		}
+	public function getIp()
+	{
+		return $_SERVER['REMOTE_ADDR'];
+	}
+	public function getTime()
+	{
+		return date('Y-m-d H:i:s');
+	}
+	public function accessLog($way)
+	{
+		if($way=='server')
+		{
+			return view('public.accessLogClient');
+		}
+		else if ($way=='client')
+		{
+			return view('public.accessLogServer');
+		}
+		else
+		{
+			return $this->lol();
+		}
+
+	}
+
 	}		

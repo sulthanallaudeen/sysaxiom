@@ -24,6 +24,14 @@ Route::get('project', 'PublicController@project');
 Route::get('technology', 'PublicController@technology');
 Route::post('searchBlog', 'PublicController@searchBlog');
 
+#Access Info
+Route::any('getPlatform', 'PublicController@getPlatform');
+Route::any('getBrowser/{data}', 'PublicController@getBrowser');
+Route::any('getIp', 'PublicController@getIp');
+Route::any('getTime', 'PublicController@getTime');
+Route::any('accessLog/{way}', 'PublicController@accessLog');
+
+
 
 #Admin Controller
 Route::get('sa', 'PublicController@adminLogin');
