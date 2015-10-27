@@ -50,8 +50,11 @@
             </span>
         </div>
     </div>
-	<div class="alert alert-success" role="alert">
+	<div class="alert alert-success" role="alert" style='display:none'>
         <strong>Inspiring Qutoes :</strong>  {{ Inspiring::quote() }}
+      </div>        
+	  <div class="alert alert-success" role="alert" >
+        <strong>Take a look about the <a href='http://www.sysaxiom.com/accessLog/server'>Website Access Tool</a> which is launched on 15-10-2015</strong>
       </div>        
       </div>
 

@@ -26,7 +26,7 @@ return [
 	|
 	*/
 
-	'url' => 'http://sysaxiom.com',
+	'url' => 'http://localhost',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -194,7 +194,7 @@ return [
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
 		'Form' => 'Collective\Html\FormFacade',
-		'Html' => 'Collective\Html\HtmlFacade',
+        'Html' => 'Collective\Html\HtmlFacade',
 
 	],
 

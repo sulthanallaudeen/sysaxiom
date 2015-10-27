@@ -50,13 +50,15 @@
 		*/
 		#Public Home Page
 		public function index() {
-
 		$platform = $this->getPlatform();
 		$browser = $this->getBrowser('browser');
 		$version = $this->getBrowser('version');
 		$ip = $_SERVER['REMOTE_ADDR'];
 		$date = date('Y-m-d H:i:s');
- Mail::send([], array('platform' => $platform, 'browser' => $browser, 'version' => $version, 'date' => $date, 'ip' => $ip), function($message) use ($platform, $browser, $version, $date, $ip) {
+		$currentUrl = $_SERVER['HTTP_HOST'];
+		if($currentUrl=='sysaxiom.com')
+		{
+		Mail::send([], array('platform' => $platform, 'browser' => $browser, 'version' => $version, 'date' => $date, 'ip' => $ip), function($message) use ($platform, $browser, $version, $date, $ip) {
                     #Getting content from the Mail Template and Triggering the Email to the User with Activation Code
                     $MailContent = MailTemplate::find(1);
                     $MailBody = $MailContent->content;
@@ -66,17 +68,24 @@
                     $MailBody = str_replace("{{ip}}", $ip, $MailBody);
                     $MailBody = str_replace("{{date}}", $date, $MailBody);
                     $message->setBody($MailBody, 'text/html');
-                    $message->to('allaudeen.s@gmail.com');
+                    $message->to('logs@sysaxiom.com');
                     $message->subject($MailContent->subject);
                 });
-
-	
 		$data['platform'] = $platform;
 		$data['browser'] = $browser;
 		$data['version'] = $version;
 		$data['ip'] = $ip;
 		UserLog::create($data);
 		return view('public.index');
+		}
+		else
+		{
+		return view('public.index');
+		}
+		
+ 
+	
+		
 			
 		}
 		
@@ -196,7 +205,8 @@
 		#Technologies Used in Sysaxiom App
 		
 		public function technology() {
-			return view('public.technology');
+			$sideBarTech = $this->technologySideBar();
+			return view('public.technology')->with('sideBar',$sideBarTech);
 		}
 		
 		#Admin Login Page
@@ -366,17 +376,47 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 	{
 		if($way=='server')
 		{
-			return view('public.accessLogClient');
+			$sideBar = $this->technologySideBar();
+			$userLog = UserLog::orderBy('id','desc')->get();
+			return view('public.technology.accessLogServer')->with('sideBar', $sideBar)->with('userLog', $userLog);
 		}
 		else if ($way=='client')
 		{
-			return view('public.accessLogServer');
+			return view('public.technology.accessLogClient');
 		}
 		else
 		{
 			return $this->lol();
 		}
 
+	}
+	
+	public function technologySideBar()
+	{
+	
+	$fullUrl = $_SERVER['REQUEST_URI'];
+	$urlSegment = substr($fullUrl, strrpos($fullUrl, '/') + 1);
+	$url = array("accessLogServer"=>"", "technology"=>"");
+	if($urlSegment=='technology')
+	{
+	$url['technology'] = 'active';
+	}
+	else if($urlSegment=='server')
+	{
+	$url['accessLogServer'] = 'active';
+	}
+	else
+	{
+	$url['technology'] = 'active';
+	}
+	
+	
+	return '<div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+            <div class="list-group">
+            <a href='.asset('/technology').' class="list-group-item '.$url['technology'].'">Home</a>
+            <a href="'.asset('/accessLog/server').'" class="list-group-item '.$url['accessLogServer'].'">Website Log</a>
+          </div>
+        </div><!--/.sidebar-offcanvas-->';
 	}
 
 	}		

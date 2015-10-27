@@ -55,9 +55,9 @@ return [
 		'mysql' => [
 			'driver'    => 'mysql',
 			'host'      => env('DB_HOST', 'localhost'),
-			'database'  => env('DB_DATABASE', 'sysaxiom_db'),
-			'username'  => env('DB_USERNAME', 'sysaxiom_sa'),
-			'password'  => env('DB_PASSWORD', 'Allaudeen@#000'),
+			'database'  => env('DB_DATABASE', 'sysaxiom'),
+			'username'  => env('DB_USERNAME', 'root'),
+			'password'  => env('DB_PASSWORD', ''),
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
