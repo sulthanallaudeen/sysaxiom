@@ -30,5 +30,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 * @var array
 	 */
 	protected $hidden = ['password', 'remember_token'];
-
+	
+	public static $adminUserName = array(
+		'name' =>  'required',
+        );
+	public static $adminEmail = array(
+		'email' =>  'required|email',
+        );
+	public static $adminPassword = array(
+		'password' =>  'required',
+        );
+		
+		
+		
+	
 }
