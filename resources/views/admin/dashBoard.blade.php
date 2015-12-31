@@ -24,7 +24,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="#">
+                        <a href="{{ URL::to('/listblog') }}">
                             <div class="panel-footer">
                                 <span class="pull-left">View Details</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -38,7 +38,7 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <i class="fa fa-clipboard fa-5x"></i>
+                                    <i class="fa fa-tags fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="huge">{{ $tagCount }}</div>
@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="#">
+                        <a href="{{ URL::to('/listtag') }}">
                             <div class="panel-footer">
                                 <span class="pull-left">View Details</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -63,12 +63,12 @@
                                     <i class="fa fa-comment fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">{{ $contactCount }}</div>
+                                    <div class="huge">{{ $contactCount }} / {{ $totalCount }}</div>
                                     <div>Total Messages !</div>
                                 </div>
                             </div>
                         </div>
-                        <a href="#">
+                        <a href="{{ URL::to('/messages') }}">
                             <div class="panel-footer">
                                 <span class="pull-left">View Details</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -82,7 +82,7 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <i class="fa fa-tag fa-5x"></i>
+                                    <i class="fa fa-clipboard fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="huge">{{ $totalHit }}</div>
@@ -90,8 +90,9 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="#">
+                        <a href="{{ URL::to('/sys-web-log') }}">
                             <div class="panel-footer">
+
                                 <span class="pull-left">View Details</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
@@ -147,7 +148,13 @@
                 <div class="col-lg-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-bell fa-fw"></i> Notifications Panel
+                            <i class="fa fa-bell fa-fw"></i> Notify via Mobile
+                        </div>
+                        <div class="panel-body">
+                            <div id="morris-donut-chart"></div>
+                            <input class="form-control" style="width:100%" placeholder="Title" name="notifyTitle" type="text" autofocus>
+                            <textarea rows="3" style="width:100%" placeholder="Message" name="notifyMessage"></textarea>
+                            <button class="btn btn-default btn-block" id="notifyUser">Notify</button>
                         </div>
                         <!-- /.panel-heading -->
                         <!-- /.panel-body -->

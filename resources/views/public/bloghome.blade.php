@@ -32,7 +32,7 @@
                 <a href="{{ URL::to('tag/'.$tagName) }}" title="{{ 'Tags related to : '.$tagName }}">{{ $tagName }}</a>
                 @endforeach
                 <?php
-                $date = date('d M Y', strtotime($post->created_at));
+                $date = date('d M Y', strtotime($post->blogDate));
                 ?></p>
                 <p align="right"><span class="glyphicon glyphicon-time"></span> Posted on {{ $date }}</p>
                 <hr>

@@ -13,6 +13,7 @@
           <div class="jumbotron">
             <h2>Hey there !</h2>
             <p>Here you can find the Technologies used in this site. I am developing this section rapidly.. Cheers !</p>
+            
           </div>
           <div class="row">
             <div class="col-xs-6 col-lg-4">

@@ -57,54 +57,13 @@
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
-                <li class="dropdown">
+                <li class="dropdown" id='renderMessageList'>
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                        <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i><span id='renderMessageCount'></span>
                     </a>
-                    <ul class="dropdown-menu dropdown-messages">
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <strong>John Smith</strong>
-                                    <span class="pull-right text-muted">
-                                        <em>Yesterday</em>
-                                    </span>
-                                </div>
-                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <strong>John Smith</strong>
-                                    <span class="pull-right text-muted">
-                                        <em>Yesterday</em>
-                                    </span>
-                                </div>
-                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <strong>John Smith</strong>
-                                    <span class="pull-right text-muted">
-                                        <em>Yesterday</em>
-                                    </span>
-                                </div>
-                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a class="text-center" href="#">
-                                <strong>Read All Messages</strong>
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        </li>
-                    </ul>
+                    
+
+                    
                     <!-- /.dropdown-messages -->
                 </li>
                 <!-- /.dropdown -->
@@ -257,7 +216,7 @@
                         <li><a href="{{ URL::to('/profile-settings') }}"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="{{ URL::to('/logout') }}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -343,6 +302,21 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+						<li>
+                            <a href="#"><i class="fa fa-sitemap fa-fw"></i> Util<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#">Sysaxiom<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="{{ URL::to('/sys-web-log') }}">Sysaxiom Log</a>
+                                        </li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
+                                </li>	
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
@@ -351,7 +325,58 @@
         </nav>
 
 @yield('content')
-    
+
+
+{!! Form::open(array())!!}
+{!! Form::close() !!}
+<script>
+$(document).ready(function() {
+var _token = $("input[name=_token]").val();
+$.post( "notificationAreaMessageList", { _token : _token})
+  .done(function( data ) {
+    var result = jQuery.parseJSON(JSON.stringify(data));
+    if (result.success==1)
+    {
+        $("#renderMessageList").append(result.messageData);
+    }
+    else
+    {
+    }
+  });
+ $.post( "getMessageCount", { _token : _token})
+  .done(function( data ) {
+    var result = jQuery.parseJSON(JSON.stringify(data));
+    if (result.success==1)
+    {
+        $("#renderMessageCount").append(result.messageCount);
+    }
+    else
+    {
+    }
+  });
+
+
+$( "#notifyUser" ).click(function() {
+var id = $(this).attr('id')
+var _token = $("input[name=_token]").val();
+var notifyTitle =  $("#notifyTitle").val();
+var notifyMessage =  $("#notifyMessage").val();
+$.post( "notifyUser", { _token : _token, id : id})
+  .done(function( data ) {
+    var result = jQuery.parseJSON(JSON.stringify(data));
+
+    if (result.success==1)
+    {
+    $('#dataTables-example').html(result.updatedMessage);
+    }
+    else
+    {        
+    }
+  });
+});
+});
+</script>
+
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{{ asset('/').('public/admin/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use URL;
 use Hash;
 use Mail;
 use App\User;
@@ -52,9 +53,10 @@ class HomeController extends Controller {
     public function adminDashboard() {
         $blogCount = Blog::all()->count();
         $tagCount = Tag::all()->count();
-        $contactCount = ContactMails::all()->count();
+        $contactCount = ContactMails::where('messageStatus',0)->count();
+		$totalCount = ContactMails::all()->count();
         $totalHit = UserLog::all()->count();
-        return view('admin.dashBoard')->with('blogCount', $blogCount)->with('blogCount', $blogCount)->with('tagCount', $tagCount)->with('contactCount', $contactCount)->with('totalHit', $totalHit);
+        return view('admin.dashBoard')->with('blogCount', $blogCount)->with('blogCount', $blogCount)->with('tagCount', $tagCount)->with('contactCount', $contactCount)->with('totalCount', $totalCount)->with('totalHit', $totalHit);
     }
 
     #List Blogs
@@ -76,6 +78,7 @@ class HomeController extends Controller {
     public function postBlog() {
         $blogData = Input::except('blogTags');
         $blogData['blogAuthor'] = 1;
+        if($blogData['blogDate']=='') { $blogData['blogDate'] = date('Y-m-d H:i:s'); }
         $validation = Validator::make($blogData, Blog::$postBlog);
         if ($validation->passes()) {
             $postBlog = Blog::create($blogData);
@@ -84,7 +87,7 @@ class HomeController extends Controller {
                 BlogTag::create([
                     'blog_id' => $postBlog->id,
                     'user_id' => '1',
-                    'tag_id' => $blogTagsData[0]
+                    'tag_id' => $blogTagsData
                 ]);
             }
 
@@ -108,6 +111,7 @@ class HomeController extends Controller {
 
     public function updateBlog() {
         $blogData = Input::except('blogTags', '_token');
+        if($blogData['blogDate']=='') { unset($blogData['blogDate']); }
         $validation = Validator::make($blogData, Blog::$updateBlog);
         if ($validation->passes()) {
             $blog = BlogTag::where('blog_id', Input::get('id'))->delete();
@@ -257,30 +261,275 @@ class HomeController extends Controller {
         }
         return $Response;
     }
+	
+	
+	public function listTask()
+	{
+	$tasks = Task::all();
+    return view('admin.task.listTask')->with('tasks', $tasks);
+		
+	}
+	
+	public function editTask($id)
+	{
+	$taskData = Task::where('id', $id)->first();
+    return view('admin.task.editTask')->with('taskData', $taskData);
+	}
+	#Messages
 
-    public function postBlogs() {
-        $blogData = Input::except('blogTags');
-        $blogData['blogAuthor'] = 1;
-        $validation = Validator::make($blogData, Blog::$postBlog);
-        if ($validation->passes()) {
-            $postBlog = Blog::create($blogData);
-            $blogTags = Input::get('blogTags');
-            foreach ($blogTags as $blogTagsData) {
-                BlogTag::create([
-                    'blog_id' => $postBlog->id,
-                    'user_id' => '1',
-                    'tag_id' => $blogTagsData[0]
-                ]);
-            }
+    public function listMessages() {
+        $mails = ContactMails::all();
+        return view('admin.messages.allmessages')->with('mails', $mails);
+    }
+	
+	public function getMessage()
+	{
+		$mailData = ContactMails::where('id', Input::get('id'))->first();
+		if($mailData!='')
+		{
+		   $Response = array('success' => '1', 'mailData' => $mailData);
+		}
+		else
+		{
+		   $Response = array('success' => '0', 'message' => 'Mail Not Found');
+		}
+			return $Response;
 
-            $Response = array('success' => '1', 'blogId' => $postBlog->id);
-        } else {
-            $Response = array('success' => '0', 'err' => $validation->messages());
+	}
+	
+	public function messageMarkAsRead()
+	{
+        $status['messageStatus']= 1;
+        ContactMails::where('id', Input::get('id'))->update($status);
+
+        $mails = ContactMails::all();
+        $messageTableHtml = '<table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>From</th>
+                                            <th>Status</th>
+                                            <th>Received At</th>
+                                            <th>Read</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>';
+
+        foreach ($mails as $mail) 
+        {
+        $messageTableHtml .= '<tr class="odd gradeX">
+                            <td>'.$mail->id.'</td>
+                            <td>'.$mail->userEmail.'</td>
+                            <td>'.$mail->messageStatus.'</td>
+                            <td>'.$mail->created_at.'</td>
+                            <td>
+                            <button type="button" class="btn btn-success" id='.$mail->id.' data-toggle="modal" data-target="#myModal">Read</button>';
+        if($mail->messageStatus==0)
+        {
+        $messageTableHtml .='<button type="button" class="btn btn-info btn-circle" id='.$mail->id.'><i class="fa fa-check"></i></button>';
         }
+        else
+        {
+        $messageTableHtml .='<button type="button" class="btns btn btn-info btn-circle" id='.$mail->id.' style="background-color: grey;border-color:grey"><i class="fa fa-check"></i></button>';        
+        }
+        $messageTableHtml .='</td>
+                            </tr>
+                            ';
+        
+        }
+        $messageTableHtml .= '</tbody></table>';
+        $messageTableHtml .= '
+            <script>
+$(document).ready(function() {
+    $( ".btn" ).click(function() {
+var id = $(this).attr("id")
+var _token = $("input[name=_token]").val();
+$.post( "messageMarkAsRead", { _token : _token, id : id})
+  .done(function( data ) {
+    var result = jQuery.parseJSON(JSON.stringify(data));
+
+    if (result.success==1)
+    {
+    $("#dataTables-example").html(result.updatedMessage);
+    }
+    else
+    {        
+    }
+  });
+});
+
+$( ".btns" ).click(function() {
+var id = $(this).attr("id")
+var _token = $("input[name=_token]").val();
+$.post( "messageMarkAsUnRead", { _token : _token, id : id})
+  .done(function( data ) {
+    var result = jQuery.parseJSON(JSON.stringify(data));
+
+    if (result.success==1)
+    {
+    $("#dataTables-example").html(result.updatedMessage);
+    }
+    else
+    {        
+    }
+  });
+});
+} );
+</script>';
+
+
+        $Response = array('success' => '1', 'updatedMessage' => $messageTableHtml);
+        return $Response;
+	}
+	    
+	public function messageMarkAsUnRead()
+    {
+        $status['messageStatus']= 0;
+        ContactMails::where('id', Input::get('id'))->update($status);
+
+        $mails = ContactMails::all();
+        $messageTableHtml = '<table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>From</th>
+                                            <th>Status</th>
+                                            <th>Received At</th>
+                                            <th>Read</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>';
+
+        foreach ($mails as $mail) 
+        {
+        $messageTableHtml .= '<tr class="odd gradeX">
+                            <td>'.$mail->id.'</td>
+                            <td>'.$mail->userEmail.'</td>
+                            <td>'.$mail->messageStatus.'</td>
+                            <td>'.$mail->created_at.'</td>
+                            <td>
+                            <button type="button" class="btn btn-success" id='.$mail->id.' data-toggle="modal" data-target="#myModal">Read</button>';
+        if($mail->messageStatus==0)
+        {
+        $messageTableHtml .='<button type="button" class="btn btn-info btn-circle" id='.$mail->id.'><i class="fa fa-check"></i></button>';
+        }
+        else
+        {
+        $messageTableHtml .='<button type="button" class="btns btn btn-info btn-circle" id='.$mail->id.' style="background-color: grey;border-color:grey"><i class="fa fa-check"></i></button>';        
+        }
+        $messageTableHtml .='</td>
+                            </tr>
+                            ';
+        
+        }
+        $messageTableHtml .= '</tbody></table>';
+
+        $messageTableHtml .= '
+            <script>
+$(document).ready(function() {
+    $( ".btn" ).click(function() {
+var id = $(this).attr("id")
+var _token = $("input[name=_token]").val();
+$.post( "messageMarkAsRead", { _token : _token, id : id})
+  .done(function( data ) {
+    var result = jQuery.parseJSON(JSON.stringify(data));
+
+    if (result.success==1)
+    {
+    $("#dataTables-example").html(result.updatedMessage);
+    }
+    else
+    {        
+    }
+  });
+});
+
+$( ".btns" ).click(function() {
+var id = $(this).attr("id")
+var _token = $("input[name=_token]").val();
+$.post( "messageMarkAsUnRead", { _token : _token, id : id})
+  .done(function( data ) {
+    var result = jQuery.parseJSON(JSON.stringify(data));
+
+    if (result.success==1)
+    {
+    $("#dataTables-example").html(result.updatedMessage);
+    }
+    else
+    {        
+    }
+  });
+});
+});
+</script>';
+
+
+        $Response = array('success' => '1', 'updatedMessage' => $messageTableHtml);
         return $Response;
     }
-    
-    #Profile Settings
+	
+	public function notificationAreaMessageList() 
+	{
+		$messageListHead = '<ul class="dropdown-menu dropdown-messages" id="notifyAreaMessages" aria-expanded="true">';
+		
+		$unReadMessages = ContactMails::where('messageStatus', 0)->limit(3)->get();
+		
+		$messageListBody = '';
+		if(count($unReadMessages)==0)
+		{
+		$messageListBody = '<div align="center"><strong>No New Messages</strong></div>';
+		}
+		else
+		{
+		
+		foreach($unReadMessages as $Messages)
+		{
+			
+			$userMessage = substr($Messages->userMessage,0,20).'...';
+			$messageListBody .= '<li>
+                            <a href="#">
+                                <div>
+                                    <strong>'.$Messages->userEmail.'</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>'.$Messages->created_at.'</em>
+                                    </span>
+                                </div>
+                                <div>'.$userMessage.'</div>
+                            </a>
+                        </li>';
+		}
+		}
+		
+		$messageListContent = '<li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="'.URL::to("/messages").'">
+                                <strong>Read All Messages</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+</ul>
+<script>
+$(document).ready(function() {
+console.log("start");
+$( ".dropdown-toggle" ).click(function() {
+});
+});
+</script>';
+$messageList = $messageListHead.$messageListBody.$messageListContent;
+		$Response = array('success' => '1', 'messageData' => $messageList);
+        return $Response;
+    }
+	
+	public function getMessageCount()
+	{
+	$messageCount = ContactMails::all()->where('messageStatus',0)->count();
+	$Response = array('success' => '1', 'messageCount' => $messageCount);
+	return $Response;
+		}
+	
+	
+	#Profile Settings
 
     public function profileSettings() {
         return view('admin.settings.profile');

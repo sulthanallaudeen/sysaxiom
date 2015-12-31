@@ -1,0 +1,15 @@
+<link rel="stylesheet" type="text/css" href="jquery.datetimepicker.css"/>
+<input type="text" class="default_datetimepicker"/>
+<script src="jquery.js"></script>
+<script src="jquery.datetimepicker.full.js"></script>
+<script>
+$.datetimepicker.setLocale('en');
+$('.default_datetimepicker').datetimepicker({
+	formatTime:'H:i',
+	formatDate:'d.m.Y',
+	//defaultDate:'8.12.1986', // it's my birthday
+	defaultDate:'+03.01.1970', // it's my birthday
+	defaultTime:'10:00',
+	timepickerScrollbar:false
+});
+</script>

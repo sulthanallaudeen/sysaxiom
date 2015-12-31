@@ -48,7 +48,29 @@ class PublicController extends Controller {
      * @return Response
      */
     #Public Home Page
-    public function index() {
+	public function index() 
+	{
+        #return '';
+        return view('public.index');
+	$platform = $this->getPlatform();
+        $browser = $this->getBrowser('browser');
+        $version = $this->getBrowser('version');
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $date = date('Y-m-d H:i:s');
+        $currentUrl = $_SERVER['HTTP_HOST'];
+		$data['platform'] = $platform;
+        $data['browser'] = $browser;
+        $data['version'] = $version;
+        $data['ip'] = $ip;
+        UserLog::create($data);
+       	return view('public.index');
+	}
+	
+	
+	
+    public function indexLog() {
+        return view('public.index');
+        exit;
         $platform = $this->getPlatform();
         $browser = $this->getBrowser('browser');
         $version = $this->getBrowser('version');
@@ -180,6 +202,12 @@ class PublicController extends Controller {
         return view('public.gallery');
     }
 
+    #Gallery Explorer
+
+    public function galleryExplorer($dir) {
+        return view('public.galleryexplorer')->with('dir', $dir);
+    }
+
     #Project Page
 
     public function project() {
@@ -215,7 +243,7 @@ class PublicController extends Controller {
 
     public function logoutAdmin() {
         Session::flush();
-        return view('admin.login.login');
+        return Redirect::to('sa');
     }
 
     #System Utils
@@ -347,7 +375,17 @@ class PublicController extends Controller {
             return $this->lol();
         }
     }
-
+	
+	#Util
+	#Sysaxiom WebLog
+	
+	public function utilSysaxiomWebLog() {
+            $sideBar = $this->technologySideBar();
+            $userLog = UserLog::orderBy('id', 'desc')->get();
+            return view('admin.util.sysWebLog')->with('sideBar', $sideBar)->with('userLog', $userLog);
+    }
+	
+	
     public function technologySideBar() {
 
         $fullUrl = $_SERVER['REQUEST_URI'];
@@ -368,6 +406,77 @@ class PublicController extends Controller {
             <a href="' . asset('/accessLog/server') . '" class="list-group-item ' . $url['accessLogServer'] . '">Website Log</a>
           </div>
         </div><!--/.sidebar-offcanvas-->';
+    }
+	
+	public function PushNotification($DeviceId,$Message) 
+    {
+    $url = 'https://android.googleapis.com/gcm/send';
+    $fields = array(
+            'registration_ids' => $DeviceId,
+            'data' => $Message
+        );
+    $headers = array(
+        'Authorization: key = AIzaSyDTL6-ORUx5arAi1M9el1VzZ7pefr9Ji9U',
+        'Content-Type: application/json'
+                      );
+    $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+    $result = curl_exec($ch);
+    if ($result === FALSE) {
+        die('Curl failed: ' . curl_error($ch));
+        }
+        curl_close($ch);
+    
+    }
+	public function sendPush()
+	{
+	$allUser = User::all();
+	foreach($allUser as $user)
+	{
+    $DeviceId = array($user->gcm_id);
+    $Message =  array( 'title' => 'Vahitha', 'message' => '@chennai', 'info' => 'super secret info' );
+    $this->PushNotificationLocal($DeviceId, $Message);       
+	}
+	}
+
+    public function sendPushNotification()
+    {
+
+        $userData['gcm_id'] = Input::get('gcmId'); 
+        User::where('id', '1')->update($userData);
+        return 1;
+    }
+	
+	public function PushNotificationLocal($DeviceId,$Message) 
+    {
+	
+    $url = 'https://android.googleapis.com/gcm/send';
+    $fields = array(
+            'registration_ids' => $DeviceId,
+            'data' => $Message
+        );
+    $headers = array(
+        'Authorization: key = AIzaSyDTL6-ORUx5arAi1M9el1VzZ7pefr9Ji9U',
+        'Content-Type: application/json'
+                      );
+    $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+    $result = curl_exec($ch);
+    if ($result === FALSE) {
+        die('Curl failed: ' . curl_error($ch));
+        }
+        curl_close($ch);
+    
     }
 
 }

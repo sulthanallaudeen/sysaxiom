@@ -14,7 +14,26 @@ class VerifyCsrfToken extends BaseVerifier {
 	 */
 	public function handle($request, Closure $next)
 	{
-		return parent::handle($request, $next);
+	$checkAuth =  $request->gcmId;
+	#return parent::handle($request, $next);
+		if(isset($checkAuth))
+		{
+			
+			if(1==1)
+			{
+				return $next($request);
+			}
+			else
+			{
+				return parent::handle($request, $next);
+			}
+			
+		}	
+		else
+		{
+			return parent::handle($request, $next);
+		}
+		
 	}
 
 }

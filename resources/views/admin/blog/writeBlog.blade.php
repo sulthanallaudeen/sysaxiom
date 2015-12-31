@@ -57,6 +57,9 @@
                                     </div>
                                   </div>
                                 </div>
+                                <div class="form-group">
+                                <span style='align:left'><b>Blog Date : </b></span><input type="text" class="default_datetimepicker" id='blogDate'/>
+                                </div>
                                         <p align="center">
                                         <button type="button" class="btn btn-default" id="postBlog">Post Blog</button>
                                         <button type="reset" class="btn btn-default">Reset</button>
@@ -97,7 +100,7 @@ $( "#blogTitle" ).keypress(function() {
   var _token = $("input[name=_token]").val();
   var blogTitle =  $("#blogTitle").val();
   var blogUrl =  $("#blogUrl").val();
-  var blogDate =  $("#blogDate").val()+' '+$("#blogTime").val();
+  var blogDate =  $("#blogDate").val();
   var blogContent = CKEDITOR.instances['blogpost'].getData();
   var blogStatus =   $('input:radio[name=blogStatus]:checked').val();
   var blogTags = [];
@@ -146,5 +149,22 @@ $( "#blogTitle" ).keypress(function() {
 } );
 
 </script>
+<!--Date-->
+<link href="{{ asset('/').('public/lib/date/date.css') }}" type="text/css" rel="stylesheet"/>
+<script src="{{ asset('/').('public/lib/date/date.js') }}"></script>  
+<script>
+$(document).ready(function() {
+$.datetimepicker.setLocale('en');
+$('.default_datetimepicker').datetimepicker({
+  formatTime:'H:i',
+  formatDate:'d.m.Y',
+  //defaultDate:'8.12.1986', // it's my birthday
+  defaultDate:'+03.01.1970', // it's my birthday
+  defaultTime:'10:00',
+  timepickerScrollbar:false
+});
+});
+</script>
+<!--End of Date PIcker-->
 
 @stop

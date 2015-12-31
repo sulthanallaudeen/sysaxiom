@@ -13,6 +13,7 @@
 
 #Public Controller
 Route::get('/', 'PublicController@index');
+Route::get('/log', 'PublicController@indexLog');
 Route::get('blog', 'PublicController@blog');
 Route::get('blog/{id}', 'PublicController@blogData');
 Route::get('tag/{id}', 'PublicController@tagData');
@@ -20,6 +21,7 @@ Route::get('tag/{id}/about', 'PublicController@tagAbout');
 Route::get('contact', 'PublicController@contact');
 Route::post('sendMail', 'PublicController@sendMail');
 Route::get('gallery', 'PublicController@gallery');
+Route::get('gallery/{dir}', 'PublicController@galleryExplorer');
 Route::get('project', 'PublicController@project');
 Route::get('technology', 'PublicController@technology');
 Route::post('searchBlog', 'PublicController@searchBlog');
@@ -52,12 +54,21 @@ Route::get('createtask', 'HomeController@createTask');
 Route::post('postTask', 'HomeController@postTask');
 Route::get('edittask/{id}', 'HomeController@editTask');
 Route::post('updateTask', 'HomeController@updateTask');
-#Task
+#Category
 Route::get('listcat', 'HomeController@listCat');
 Route::get('createcat', 'HomeController@createCat');
 Route::post('postCat', 'HomeController@postCat');
 Route::get('editcat/{id}', 'HomeController@editCat');
 Route::post('updateCat', 'HomeController@updateCat');
+#Util
+Route::get('sys-web-log', 'PublicController@utilSysaxiomWebLog');
+#Messages
+Route::get('messages', 'HomeController@listMessages');
+Route::post('getMessage', 'HomeController@getMessage');
+Route::post('messageMarkAsRead', 'HomeController@messageMarkAsRead');
+Route::post('messageMarkAsUnRead', 'HomeController@messageMarkAsUnRead');
+Route::post('notificationAreaMessageList', 'HomeController@notificationAreaMessageList');
+Route::post('getMessageCount', 'HomeController@getMessageCount');
 #Settings
 Route::get('profile-settings', 'HomeController@profileSettings');
 Route::post('getAdminProfileSettingsData', 'HomeController@adminProfileSettingsData');
@@ -66,11 +77,13 @@ Route::post('updateAdminEmail', 'HomeController@updateAdminEmail');
 Route::post('updateAdminPassword', 'HomeController@updateAdminPassword');
 #App Configuration
 Route::get('appconfig', 'HomeController@appConfig');
-#Web Services :: Depreciated
-Route::get('b', 'PublicController@adminLogin');
-Route::any('checkSession', 'PersonalManager@checkSession');
-Route::post('authLogin', 'PersonalManager@authLogin');
-Route::get('home', 'HomeController@index');
+#New Web Services :: 
+Route::get('getToken', 'AppController@getToken');
+Route::post('appLogin', 'AppController@Login');
+Route::post('getDashboardData', 'AppController@getDashboardData');
+Route::post('sendPushNotification', 'PublicController@sendPushNotification');
+Route::get('sendPush', 'PublicController@sendPush');
+Route::get('sendPushMsg', 'AppController@sendPush');
 #Default Auth Route
 Route::controllers([
     'auth' => 'Auth\AuthController',
